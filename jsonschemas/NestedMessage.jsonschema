@@ -1,5 +1,9 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema#",
+    "required": [
+        "payload",
+        "description"
+    ],
     "properties": {
         "payload": {
             "properties": {
@@ -50,6 +54,6 @@
             "type": "string"
         }
     },
-    "additionalProperties": false,
+    "additionalProperties": true,
     "type": "object"
 }

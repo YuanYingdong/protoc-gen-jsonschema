@@ -22,6 +22,7 @@ var (
 )
 
 type sampleProto struct {
+	AllFieldsRequired         bool
 	AllowNullValues           bool
 	ExpectedJSONSchema        []string
 	FilesToGenerate           []string
@@ -52,6 +53,8 @@ func TestGenerateJsonSchema(t *testing.T) {
 	testConvertSampleProto(t, sampleProtos["SelfReference"])
 	testConvertSampleProto(t, sampleProtos["CyclicalReference"])
 	testConvertSampleProto(t, sampleProtos["Timestamp"])
+	testConvertSampleProto(t, sampleProtos["Proto2Required"])
+	testConvertSampleProto(t, sampleProtos["AllRequired"])
 }
 
 func testConvertSampleProto(t *testing.T, sampleProto sampleProto) {
@@ -63,6 +66,7 @@ func testConvertSampleProto(t *testing.T, sampleProto sampleProto) {
 
 	// Use the logger to make a Converter:
 	protoConverter := New(logger)
+	protoConverter.AllFieldsRequired = sampleProto.AllFieldsRequired
 	protoConverter.AllowNullValues = sampleProto.AllowNullValues
 	protoConverter.UseProtoAndJSONFieldnames = sampleProto.UseProtoAndJSONFieldNames
 
@@ -230,6 +234,22 @@ func configureSampleProtos() {
 		ExpectedJSONSchema: []string{testdata.Timestamp},
 		FilesToGenerate:    []string{"Timestamp.proto"},
 		ProtoFileName:      "Timestamp.proto",
+	}
+
+	// Proto2Required:
+	sampleProtos["Proto2Required"] = sampleProto{
+		ExpectedJSONSchema: []string{testdata.Proto2Required},
+		FilesToGenerate:    []string{"Proto2Required.proto"},
+		ProtoFileName:      "Proto2Required.proto",
+	}
+
+	// AllRequired:
+	sampleProtos["AllRequired"] = sampleProto{
+		AllFieldsRequired:  true,
+		AllowNullValues:    false,
+		ExpectedJSONSchema: []string{testdata.PayloadMessage, testdata.NestedMessage},
+		FilesToGenerate:    []string{"NestedMessage.proto", "PayloadMessage.proto"},
+		ProtoFileName:      "NestedMessage.proto",
 	}
 }
 
